@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { orderDB } from './db.js';
+import { connectDB, orderDB, productDB, Product, Order } from './db.js';
 
 dotenv.config();
 
@@ -13,6 +13,16 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 console.log('✅ Initializing BE Creative SD Backend');
+
+// Initialize MongoDB
+let dbConnected = false;
+connectDB().then(() => {
+  dbConnected = true;
+  console.log('✅ Database initialized successfully');
+}).catch(err => {
+  console.error('❌ Failed to initialize database:', err.message);
+  process.exit(1);
+});
 
 // Stripe initialization (lazy loaded, won't block startup)
 let stripe = null;
@@ -74,72 +84,47 @@ async function syncProductToStripe(product) {
   }
 }
 
-// In-memory database
-const products = [
-  {
-    _id: '1',
-    name: 'Organic Coffee',
-    description: 'Premium organic coffee beans from Ethiopia',
-    price: 14.99,
-    category: 'BE Natural',
-    stock: 50,
-    featured: true
-  },
-  {
-    _id: '2',
-    name: 'Natural Honey',
-    description: 'Raw honey from local bees',
-    price: 12.99,
-    category: 'BE Natural',
-    stock: 30,
-    featured: true
-  },
-  {
-    _id: '3',
-    name: 'Custom T-Shirt',
-    description: 'Design your own t-shirt with custom print',
-    price: 24.99,
-    category: 'BE Custom',
-    stock: 100,
-    featured: false
-  }
-];
-
 let adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
 
 // Routes
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'Server is running' });
+  res.json({ 
+    status: 'Server is running',
+    database: dbConnected ? 'connected' : 'connecting',
+    stripe: stripe ? 'configured' : 'not configured'
+  });
 });
 
 // Get all products
-app.get('/api/products', (req, res) => {
+app.get('/api/products', async (req, res) => {
   try {
     const category = req.query.category;
-    const filtered = category ? products.filter(p => p.category === category) : products;
+    const filtered = await productDB.getAll(category);
     res.json(filtered);
   } catch (err) {
+    console.error('Failed to fetch products:', err);
     res.status(500).json({ error: 'Failed to fetch products' });
   }
 });
 
 // Get product by ID
-app.get('/api/products/:id', (req, res) => {
+app.get('/api/products/:id', async (req, res) => {
   try {
-    const product = products.find(p => p._id === req.params.id);
+    const product = await productDB.getById(req.params.id);
     if (!product) {
       return res.status(404).json({ error: 'Product not found' });
     }
     res.json(product);
   } catch (err) {
+    console.error('Failed to fetch product:', err);
     res.status(500).json({ error: 'Failed to fetch product' });
   }
 });
 
 // Create product
-app.post('/api/products', (req, res) => {
+app.post('/api/products', async (req, res) => {
   try {
     const { name, description, price, category, stock, images } = req.body;
     
@@ -147,23 +132,22 @@ app.post('/api/products', (req, res) => {
       return res.status(400).json({ error: 'Name and price are required' });
     }
 
-    const newProduct = {
-      _id: String(Date.now()),
+    const newProduct = await productDB.create({
       name,
       description: description || '',
       price: parseFloat(price),
       category: category || 'BE Natural',
       stock: parseInt(stock) || 0,
       featured: false,
-      images: Array.isArray(images) ? images : [],
-      createdAt: new Date()
-    };
-
-    products.push(newProduct);
+      images: Array.isArray(images) ? images : []
+    });
 
     // Sync to Stripe asynchronously (don't wait for it)
     syncProductToStripe(newProduct).then(stripeResult => {
-      newProduct.stripeProductId = stripeResult.stripeProductId;
+      if (stripeResult.stripeProductId) {
+        newProduct.stripeProductId = stripeResult.stripeProductId;
+        newProduct.save();
+      }
     }).catch(err => {
       console.error('Error syncing to Stripe:', err);
     });
@@ -179,22 +163,24 @@ app.post('/api/products', (req, res) => {
 });
 
 // Update product
-app.put('/api/products/:id', (req, res) => {
+app.put('/api/products/:id', async (req, res) => {
   try {
     const { name, description, price, category, stock, images } = req.body;
-    const product = products.find(p => p._id === req.params.id);
+    
+    const updateData = {};
+    if (name) updateData.name = name;
+    if (description !== undefined) updateData.description = description;
+    if (price) updateData.price = parseFloat(price);
+    if (category) updateData.category = category;
+    if (stock !== undefined) updateData.stock = parseInt(stock);
+    if (images !== undefined) updateData.images = Array.isArray(images) ? images : [];
+    updateData.updatedAt = new Date();
+
+    const product = await productDB.update(req.params.id, updateData);
     
     if (!product) {
       return res.status(404).json({ error: 'Product not found' });
     }
-
-    if (name) product.name = name;
-    if (description !== undefined) product.description = description;
-    if (price) product.price = parseFloat(price);
-    if (category) product.category = category;
-    if (stock !== undefined) product.stock = parseInt(stock);
-    if (images !== undefined) product.images = Array.isArray(images) ? images : [];
-    product.updatedAt = new Date();
 
     res.json({ message: 'Product updated successfully', product });
   } catch (err) {
@@ -204,16 +190,15 @@ app.put('/api/products/:id', (req, res) => {
 });
 
 // Delete product
-app.delete('/api/products/:id', (req, res) => {
+app.delete('/api/products/:id', async (req, res) => {
   try {
-    const index = products.findIndex(p => p._id === req.params.id);
+    const deleted = await productDB.delete(req.params.id);
     
-    if (index === -1) {
+    if (!deleted) {
       return res.status(404).json({ error: 'Product not found' });
     }
 
-    const deleted = products.splice(index, 1);
-    res.json({ message: 'Product deleted successfully', product: deleted[0] });
+    res.json({ message: 'Product deleted successfully', product: deleted });
   } catch (err) {
     console.error('Delete product error:', err);
     res.status(500).json({ error: 'Failed to delete product' });
@@ -223,9 +208,9 @@ app.delete('/api/products/:id', (req, res) => {
 // ============ ORDERS ROUTES ============
 
 // Get all orders (admin)
-app.get('/api/orders', (req, res) => {
+app.get('/api/orders', async (req, res) => {
   try {
-    const orders = orderDB.getAll();
+    const orders = await orderDB.getAll();
     res.json(orders);
   } catch (err) {
     console.error('Fetch orders error:', err);
@@ -234,9 +219,9 @@ app.get('/api/orders', (req, res) => {
 });
 
 // Get order by ID
-app.get('/api/orders/:id', (req, res) => {
+app.get('/api/orders/:id', async (req, res) => {
   try {
-    const order = orderDB.getById(req.params.id);
+    const order = await orderDB.getById(req.params.id);
     if (!order) {
       return res.status(404).json({ error: 'Order not found' });
     }
@@ -248,7 +233,7 @@ app.get('/api/orders/:id', (req, res) => {
 });
 
 // Create order
-app.post('/api/orders', (req, res) => {
+app.post('/api/orders', async (req, res) => {
   try {
     const { customer, items, totalAmount, paymentData } = req.body;
 
@@ -256,14 +241,13 @@ app.post('/api/orders', (req, res) => {
       return res.status(400).json({ error: 'Customer, items, and totalAmount are required' });
     }
 
-    const order = orderDB.create({
+    const order = await orderDB.create({
       customer,
       items,
       totalAmount,
       status: 'pending',
-      paymentStatus: paymentData?.status === 'succeeded' ? 'completed' : 'pending',
       paymentMethod: paymentData ? 'credit_card' : null,
-      paymentIntentId: paymentData?.paymentIntentId || null
+      stripePaymentId: paymentData?.paymentIntentId || null
     });
 
     console.log(`✅ Order created: ${order._id} for $${totalAmount}`);
@@ -275,10 +259,10 @@ app.post('/api/orders', (req, res) => {
 });
 
 // Update order status
-app.put('/api/orders/:id/status', (req, res) => {
+app.put('/api/orders/:id/status', async (req, res) => {
   try {
     const { status } = req.body;
-    const order = orderDB.updateStatus(req.params.id, status);
+    const order = await orderDB.updateStatus(req.params.id, status);
     
     if (!order) {
       return res.status(404).json({ error: 'Order not found' });
@@ -292,10 +276,10 @@ app.put('/api/orders/:id/status', (req, res) => {
 });
 
 // Update payment status
-app.put('/api/orders/:id/payment-status', (req, res) => {
+app.put('/api/orders/:id/payment-status', async (req, res) => {
   try {
     const { paymentStatus } = req.body;
-    const order = orderDB.updatePaymentStatus(req.params.id, paymentStatus);
+    const order = await orderDB.updatePaymentStatus(req.params.id, paymentStatus);
     
     if (!order) {
       return res.status(404).json({ error: 'Order not found' });
@@ -446,5 +430,7 @@ const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
   console.log(`📦 API Base: http://localhost:${PORT}/api`);
-  console.log(`📊 Products: ${products.length} available`);
+  console.log(`�️  Database: ${dbConnected ? 'MongoDB Connected' : 'Connecting...'}`);
 });
+
+export default app;
