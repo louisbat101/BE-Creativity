@@ -82,6 +82,36 @@ if (fs.existsSync(buildPath)) {
 const PORT = process.env.PORT || 5001;
 const HOST = '0.0.0.0';
 
-app.listen(PORT, HOST, () => {
-  console.log(`✅ BE Creative SD running on port ${PORT}`);
+// Wrap everything in try-catch for safety
+try {
+  const server = app.listen(PORT, HOST, () => {
+    console.log(`✅ BE Creative SD Server running`);
+    console.log(`📦 Listening on ${HOST}:${PORT}`);
+    console.log(`🌐 Frontend served from: ${buildPath || 'checking...'}`);
+    console.log(`⏰ Started at: ${new Date().toISOString()}`);
+  });
+
+  // Handle server errors
+  server.on('error', (err) => {
+    console.error('❌ Server error:', err);
+    if (err.code === 'EADDRINUSE') {
+      console.error(`Port ${PORT} is already in use`);
+    }
+    process.exit(1);
+  });
+} catch (err) {
+  console.error('❌ Fatal error starting server:', err);
+  process.exit(1);
+}
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+  console.error('❌ Uncaught exception:', err);
+  process.exit(1);
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled rejection at:', promise, 'reason:', reason);
+  process.exit(1);
 });
