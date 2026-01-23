@@ -1,12 +1,14 @@
 import { Sequelize, DataTypes } from 'sequelize';
-import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Initialize SQLite database (or use PostgreSQL by changing the URL)
 const sequelize = new Sequelize({
   dialect: 'sqlite',
-  storage: process.env.DB_PATH || './database.sqlite',
+  storage: join(__dirname, '../database.sqlite'),
   logging: false, // Set to console.log to see SQL queries
 });
 
