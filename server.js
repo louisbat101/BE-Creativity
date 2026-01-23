@@ -31,17 +31,30 @@ if (fs.existsSync(buildPath)) {
     }
   });
 } else {
-  // If no build, serve a helpful message
+  // If no build, proxy API requests and provide a message
+  console.warn('⚠️  Frontend build not found at', buildPath);
+  
+  app.get('/api/*', (req, res, next) => {
+    // Allow API requests to work even without frontend
+    next();
+  });
+  
+  app.get('/health', (req, res) => {
+    res.json({ status: 'Server is running', message: 'Frontend assets are being built' });
+  });
+  
   app.use((req, res) => {
     res.status(503).json({ 
       error: 'Service Unavailable',
-      message: 'Frontend build not found. The application is starting up. Please try again in a moment.',
-      buildPath: buildPath
+      message: 'Frontend is being built. Please try again in a moment.',
+      timestamp: new Date().toISOString()
     });
   });
 }
 
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
+const HOST = '0.0.0.0';
+
+app.listen(PORT, HOST, () => {
   console.log(`✅ BE Creative SD running on port ${PORT}`);
 });
