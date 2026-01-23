@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "BE Creative SD - Full-stack E-Commerce Platform",
   "main": "server.js",
-  "type": "commonjs",
+  "type": "module",
   "engines": {
     "node": "18.x"
   },
