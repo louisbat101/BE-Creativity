@@ -1,29 +1,184 @@
-import mongoose from 'mongoose';
-import Product from './models/Product.js';
-import Order from './models/Order.js';
-import PaymentLink from './models/PaymentLink.js';
+import { Sequelize, DataTypes } from 'sequelize';
+import dotenv from 'dotenv';
 
-// MongoDB Connection
+dotenv.config();
+
+// Initialize SQLite database (or use PostgreSQL by changing the URL)
+const sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: process.env.DB_PATH || './database.sqlite',
+  logging: false, // Set to console.log to see SQL queries
+});
+
+// Define Product Model
+const Product = sequelize.define('Product', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: false,
+  },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  price: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false,
+  },
+  category: {
+    type: DataTypes.ENUM('BE Natural', 'BE Custom'),
+    allowNull: false,
+    defaultValue: 'BE Natural',
+  },
+  images: {
+    type: DataTypes.JSON,
+    allowNull: true,
+    defaultValue: [],
+  },
+  stock: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+  featured: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  stripeProductId: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: Sequelize.NOW,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    defaultValue: Sequelize.NOW,
+  },
+}, {
+  timestamps: true,
+  tableName: 'products',
+});
+
+// Define Order Model
+const Order = sequelize.define('Order', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  orderNumber: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false,
+  },
+  customerName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  customerEmail: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  customerPhone: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  customerAddress: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  items: {
+    type: DataTypes.JSON,
+    allowNull: false,
+  },
+  totalAmount: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false,
+  },
+  status: {
+    type: DataTypes.ENUM('pending', 'paid', 'shipped', 'delivered'),
+    defaultValue: 'pending',
+  },
+  paymentMethod: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  stripePaymentId: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: Sequelize.NOW,
+  },
+}, {
+  timestamps: true,
+  tableName: 'orders',
+});
+
+// Define PaymentLink Model
+const PaymentLink = sequelize.define('PaymentLink', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  amount: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false,
+  },
+  currency: {
+    type: DataTypes.STRING,
+    defaultValue: 'USD',
+  },
+  stripeLink: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: Sequelize.NOW,
+  },
+}, {
+  timestamps: true,
+  tableName: 'payment_links',
+});
+
+// Database Connection
 export async function connectDB() {
   try {
-    const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/be-creative-sd';
+    await sequelize.authenticate();
+    console.log('✅ SQLite Database Connected successfully');
     
-    await mongoose.connect(mongoUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5000, // 5 second timeout for faster failure
-    });
-    
-    console.log('✅ MongoDB Connected successfully');
+    // Sync models with database
+    await sequelize.sync({ alter: true });
+    console.log('✅ Database models synced');
     
     // Seed initial data if database is empty
     await seedDatabase();
     
-    return mongoose.connection;
+    return sequelize;
   } catch (error) {
-    console.warn('⚠️  MongoDB Connection Error:', error.message);
+    console.warn('⚠️  Database connection failed:', error.message);
     console.warn('⚠️  Will use fallback in-memory storage');
-    // Don't exit - let server continue with fallback
     return null;
   }
 }
@@ -31,9 +186,9 @@ export async function connectDB() {
 // Seed initial products if database is empty
 async function seedDatabase() {
   try {
-    const existingProducts = await Product.countDocuments();
+    const count = await Product.count();
     
-    if (existingProducts === 0) {
+    if (count === 0) {
       const initialProducts = [
         {
           name: 'Organic Coffee',
@@ -41,7 +196,7 @@ async function seedDatabase() {
           price: 14.99,
           category: 'BE Natural',
           stock: 50,
-          featured: true
+          featured: true,
         },
         {
           name: 'Natural Honey',
@@ -49,7 +204,7 @@ async function seedDatabase() {
           price: 12.99,
           category: 'BE Natural',
           stock: 30,
-          featured: true
+          featured: true,
         },
         {
           name: 'Custom T-Shirt',
@@ -57,11 +212,11 @@ async function seedDatabase() {
           price: 24.99,
           category: 'BE Custom',
           stock: 100,
-          featured: false
+          featured: false,
         }
       ];
       
-      await Product.insertMany(initialProducts);
+      await Product.bulkCreate(initialProducts);
       console.log('✅ Initial products seeded successfully');
     }
   } catch (error) {
@@ -69,88 +224,95 @@ async function seedDatabase() {
   }
 }
 
-// Export models for use in routes
-export { Product, Order, PaymentLink };
-
-// Legacy helper functions kept for backwards compatibility
-// These now use MongoDB models instead of in-memory storage
-
+// Legacy helper functions for backwards compatibility
 export const productDB = {
   getAll: async (category) => {
-    const query = category ? { category } : {};
-    return await Product.find(query);
+    const query = category ? { where: { category } } : {};
+    return await Product.findAll(query);
   },
   
   getById: async (id) => {
-    return await Product.findById(id);
+    return await Product.findByPk(id);
   },
   
   create: async (data) => {
-    const newProduct = new Product(data);
-    return await newProduct.save();
+    return await Product.create(data);
   },
   
   update: async (id, data) => {
-    return await Product.findByIdAndUpdate(id, data, { new: true });
+    await Product.update(data, { where: { id } });
+    return await Product.findByPk(id);
   },
   
   delete: async (id) => {
-    return await Product.findByIdAndDelete(id);
+    const product = await Product.findByPk(id);
+    if (product) {
+      await product.destroy();
+    }
+    return product;
   }
 };
 
 export const orderDB = {
   getAll: async () => {
-    return await Order.find().populate('items.product');
+    return await Order.findAll();
   },
   
   getById: async (id) => {
-    return await Order.findById(id).populate('items.product');
+    return await Order.findByPk(id);
   },
   
   create: async (data) => {
-    const newOrder = new Order({
+    return await Order.create({
       orderNumber: `ORD-${Date.now()}`,
-      ...data
+      customerName: data.customer?.name || 'Guest',
+      customerEmail: data.customer?.email || '',
+      customerPhone: data.customer?.phone || null,
+      customerAddress: data.customer?.address || null,
+      items: data.items,
+      totalAmount: data.totalAmount,
+      status: 'pending',
+      paymentMethod: data.paymentMethod || null,
+      stripePaymentId: data.stripePaymentId || null,
     });
-    return await newOrder.save();
   },
   
   updateStatus: async (id, status) => {
-    return await Order.findByIdAndUpdate(id, { status }, { new: true });
+    await Order.update({ status }, { where: { id } });
+    return await Order.findByPk(id);
   },
   
-  updatePaymentStatus: async (id, paymentStatus, paymentMethod, cardLast4) => {
-    const updateData = { status: paymentStatus };
-    if (paymentMethod) updateData.paymentMethod = paymentMethod;
-    if (cardLast4) updateData.cardLast4 = cardLast4;
-    return await Order.findByIdAndUpdate(id, updateData, { new: true });
+  updatePaymentStatus: async (id, paymentStatus) => {
+    await Order.update({ status: paymentStatus }, { where: { id } });
+    return await Order.findByPk(id);
   }
-
 };
 
-// Payment Link operations
 export const paymentLinkDB = {
-  getAll: () => database.paymentLinks,
-  
-  create: (data) => {
-    const newLink = {
-      _id: String(Date.now()),
-      ...data,
-      isActive: true,
-      stripeLink: `https://buy.stripe.com/test_demo_${Date.now()}`,
-      createdAt: new Date()
-    };
-    database.paymentLinks.push(newLink);
-    return newLink;
+  getAll: async () => {
+    return await PaymentLink.findAll();
   },
   
-  delete: (id) => {
-    const index = database.paymentLinks.findIndex(l => l._id === id);
-    if (index === -1) return null;
-    
-    const deleted = database.paymentLinks[index];
-    database.paymentLinks.splice(index, 1);
-    return deleted;
+  getById: async (id) => {
+    return await PaymentLink.findByPk(id);
+  },
+  
+  create: async (data) => {
+    return await PaymentLink.create(data);
+  },
+  
+  update: async (id, data) => {
+    await PaymentLink.update(data, { where: { id } });
+    return await PaymentLink.findByPk(id);
+  },
+  
+  delete: async (id) => {
+    const link = await PaymentLink.findByPk(id);
+    if (link) {
+      await link.destroy();
+    }
+    return link;
   }
 };
+
+export { Product, Order, PaymentLink, sequelize };
