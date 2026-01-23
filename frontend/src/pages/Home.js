@@ -4,7 +4,7 @@ import ProductList from '../components/ProductList';
 
 export default function Home() {
   const [introduction, setIntroduction] = useState(
-    'Welcome to BE Creativity SD! Discover our premium collection of natural and custom products designed to inspire your creativity. Explore our curated selection and find the perfect products for your needs.'
+    'Welcome to BE Creative SD! Discover our premium collection of natural and custom products designed to inspire your creativity. Explore our curated selection and find the perfect products for your needs.'
   );
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function Home() {
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-5xl font-bold mb-4">BE Creativity SD</h1>
+          <h1 className="text-5xl font-bold mb-4">BE Creative SD</h1>
           <p className="text-xl mb-8">Premium Natural & Custom Products</p>
           <div className="space-x-4">
             <Link to="/be-natural" className="bg-white text-green-600 px-8 py-3 rounded-lg font-bold hover:bg-green-50 transition">

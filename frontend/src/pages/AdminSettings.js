@@ -10,11 +10,11 @@ export default function AdminSettings() {
     email: 'info@becreativity.com',
     phone: '+1 (555) 123-4567',
     hours: 'Mon - Fri, 9AM - 6PM',
-    company: 'BE Creativity SD',
+    company: 'BE Creative SD',
     address: '123 Creative Street',
     city: 'San Diego, CA 92101',
     country: 'United States',
-    disclaimer: 'BE Creativity SD is an e-commerce platform offering natural and custom products. All products are provided "as is" without any warranty. We are not responsible for any direct, indirect, incidental, or consequential damages arising from the use of our products or services. Prices and availability are subject to change without notice. By using this website, you agree to our terms and conditions.'
+    disclaimer: 'BE Creative SD is an e-commerce platform offering natural and custom products. All products are provided "as is" without any warranty. We are not responsible for any direct, indirect, incidental, or consequential damages arising from the use of our products or services. Prices and availability are subject to change without notice. By using this website, you agree to our terms and conditions.'
   });
   const [savedMessage, setSavedMessage] = useState('');
   const [activeTab, setActiveTab] = useState('introduction');
@@ -38,7 +38,7 @@ export default function AdminSettings() {
     if (savedIntro) {
       setIntroduction(savedIntro);
     } else {
-      setIntroduction('Welcome to BE Creativity SD! Discover our premium collection of natural and custom products designed to inspire your creativity. Explore our curated selection and find the perfect products for your needs.');
+      setIntroduction('Welcome to BE Creative SD! Discover our premium collection of natural and custom products designed to inspire your creativity. Explore our curated selection and find the perfect products for your needs.');
     }
 
     // Load footer data from localStorage
