@@ -11,6 +11,7 @@ export async function connectDB() {
     await mongoose.connect(mongoUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000, // 5 second timeout for faster failure
     });
     
     console.log('✅ MongoDB Connected successfully');
@@ -20,8 +21,10 @@ export async function connectDB() {
     
     return mongoose.connection;
   } catch (error) {
-    console.error('❌ MongoDB Connection Error:', error.message);
-    process.exit(1);
+    console.warn('⚠️  MongoDB Connection Error:', error.message);
+    console.warn('⚠️  Will use fallback in-memory storage');
+    // Don't exit - let server continue with fallback
+    return null;
   }
 }
 

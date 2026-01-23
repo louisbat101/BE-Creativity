@@ -14,14 +14,15 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 console.log('✅ Initializing BE Creative SD Backend');
 
-// Initialize MongoDB
+// Initialize MongoDB (non-blocking - server starts even if DB fails)
 let dbConnected = false;
 connectDB().then(() => {
   dbConnected = true;
   console.log('✅ Database initialized successfully');
 }).catch(err => {
-  console.error('❌ Failed to initialize database:', err.message);
-  process.exit(1);
+  console.warn('⚠️  Database connection failed:', err.message);
+  console.warn('⚠️  Server will run without persistent database');
+  dbConnected = false;
 });
 
 // Stripe initialization (lazy loaded, won't block startup)
