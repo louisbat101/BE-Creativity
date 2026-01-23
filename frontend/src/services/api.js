@@ -1,0 +1,50 @@
+import axios from 'axios';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
+
+export const authAPI = {
+  login: (password) => axios.post(`${API_URL}/auth/admin-login`, { password }),
+  verify: (token) => axios.get(`${API_URL}/auth/verify`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+};
+
+export const productAPI = {
+  getAll: (category) => {
+    const url = category ? `${API_URL}/products?category=${category}` : `${API_URL}/products`;
+    return axios.get(url);
+  },
+  getById: (id) => axios.get(`${API_URL}/products/${id}`),
+  create: (data, token) => axios.post(`${API_URL}/products`, data, {
+    headers: { Authorization: `Bearer ${token}` }
+  }),
+  update: (id, data, token) => axios.put(`${API_URL}/products/${id}`, data, {
+    headers: { Authorization: `Bearer ${token}` }
+  }),
+  delete: (id, token) => axios.delete(`${API_URL}/products/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+};
+
+export const orderAPI = {
+  create: (data) => axios.post(`${API_URL}/orders`, data),
+  getById: (id) => axios.get(`${API_URL}/orders/${id}`),
+  getAll: (token) => axios.get(`${API_URL}/orders`, {
+    headers: { Authorization: `Bearer ${token}` }
+  }),
+  updateStatus: (id, status, token) => axios.put(`${API_URL}/orders/${id}/status`, { status }, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+};
+
+export const paymentAPI = {
+  createLink: (data, token) => axios.post(`${API_URL}/payments/create-link`, data, {
+    headers: { Authorization: `Bearer ${token}` }
+  }),
+  getAll: (token) => axios.get(`${API_URL}/payments`, {
+    headers: { Authorization: `Bearer ${token}` }
+  }),
+  delete: (id, token) => axios.delete(`${API_URL}/payments/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+};

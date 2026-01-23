@@ -1,0 +1,2 @@
+// Backup of StripePayment.js - contains Stripe imports that need npm packages
+// To restore: delete StripePayment.js and rename this file

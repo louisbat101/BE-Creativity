@@ -1,0 +1,5 @@
+# Redirect API calls to backend
+/api/* https://be-creativity-api.herokuapp.com/api/:splat 200!
+
+# Redirect all other routes to index.html for React Router
+/* /index.html 200
