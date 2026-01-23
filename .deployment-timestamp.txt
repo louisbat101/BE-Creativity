@@ -1,0 +1,2 @@
+Last deployment: $(date)
+Commit: Latest SQLite fix for 503 errors
