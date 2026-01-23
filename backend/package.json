@@ -1,7 +1,7 @@
 {
-  "name": "be-creativity-backend",
+  "name": "be-creative-sd-backend",
   "version": "1.0.0",
-  "description": "BE Creativity E-Commerce Backend API",
+  "description": "BE Creative SD E-Commerce Backend API",
   "main": "src/server.js",
   "type": "module",
   "scripts": {

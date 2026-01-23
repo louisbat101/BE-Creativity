@@ -154,7 +154,7 @@ export default function AdminProducts() {
       {/* Sidebar */}
       <div className="w-64 bg-slate-900 text-white">
         <div className="p-6">
-          <h1 className="text-2xl font-bold">BE Creativity</h1>
+          <h1 className="text-2xl font-bold">BE Creative SD</h1>
         </div>
         <nav className="mt-8">
           <Link to="/admin/dashboard" className="block px-6 py-3 hover:bg-slate-800 transition">

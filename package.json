@@ -1,7 +1,7 @@
 {
-  "name": "be-creativity",
+  "name": "be-creative-sd",
   "version": "1.0.0",
-  "description": "BE Creativity - Full-stack E-Commerce Platform",
+  "description": "BE Creative SD - Full-stack E-Commerce Platform",
   "main": "server.js",
   "type": "commonjs",
   "engines": {

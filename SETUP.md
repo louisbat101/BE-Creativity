@@ -1,6 +1,6 @@
-# BE Creativity - Development Setup
+# BE Creative SD - Development Setup
 
-Welcome to BE Creativity! This is a full-stack e-commerce platform with natural and custom products.
+Welcome to BE Creative SD! This is a full-stack e-commerce platform with natural and custom products.
 
 ## Quick Start
 
@@ -150,7 +150,7 @@ sudo systemctl start mongod
 
 Or use MongoDB Atlas (cloud):
 ```
-MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/be-creativity
+MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/be-creative-sd
 ```
 
 ## Common Issues

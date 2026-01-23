@@ -1,6 +1,6 @@
-# 📑 BE Creativity - Documentation Index
+# 📑 BE Creative SD - Documentation Index
 
-Welcome to BE Creativity! Here's a complete guide to all documentation files.
+Welcome to BE Creative SD! Here's a complete guide to all documentation files.
 
 ---
 

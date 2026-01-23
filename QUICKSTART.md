@@ -1,4 +1,4 @@
-# BE Creativity - Quick Start Guide
+# BE Creative SD - Quick Start Guide
 
 ## 🚀 5-Minute Setup
 
@@ -22,7 +22,7 @@ npm run install:all
 Create `backend/.env`:
 ```
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/be-creativity
+MONGODB_URI=mongodb://localhost:27017/be-creative-sd
 JWT_SECRET=your_super_secret_key_here_123456
 STRIPE_SECRET_KEY=sk_test_51234567890
 ADMIN_PASSWORD=admin123

@@ -191,7 +191,7 @@ export default function AdminSettings() {
       {/* Sidebar */}
       <div className="w-64 bg-slate-900 text-white">
         <div className="p-6">
-          <h1 className="text-2xl font-bold">BE Creativity</h1>
+          <h1 className="text-2xl font-bold">BE Creative SD</h1>
           <p className="text-sm text-gray-400">Admin Panel</p>
         </div>
         <nav className="mt-8">

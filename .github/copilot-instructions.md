@@ -1,7 +1,7 @@
-# BE Creativity E-Commerce Website
+# BE Creative SD E-Commerce Website
 
 ## Project Overview
-BE Creativity is a full-stack e-commerce platform with:
+BE Creative SD is a full-stack e-commerce platform with:
 - **BE Natural**: Natural products category
 - **BE Custom**: Custom products category
 - **Admin Panel**: Password-protected dashboard for product and payment link management

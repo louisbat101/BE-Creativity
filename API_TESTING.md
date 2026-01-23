@@ -1,4 +1,4 @@
-# BE Creativity - API Testing Guide
+# BE Creative SD - API Testing Guide
 
 ## Using cURL or Postman
 
@@ -237,7 +237,7 @@ curl http://localhost:5000/api/auth/verify \
 ### Import Collection
 
 1. Open Postman
-2. Create new Collection: "BE Creativity"
+2. Create new Collection: "BE Creative SD"
 3. Add these requests:
 
 ### Environment Variables

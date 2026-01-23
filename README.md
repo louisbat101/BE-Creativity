@@ -1,4 +1,4 @@
-# BE Creativity E-Commerce Website
+# BE Creative SD E-Commerce Website
 
 A full-stack e-commerce platform featuring natural and custom products with an admin panel for management.
 
@@ -80,7 +80,7 @@ copy .env.example .env
 4. Update `.env` with your values:
 ```
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/be-creativity
+MONGODB_URI=mongodb://localhost:27017/be-creative-sd
 JWT_SECRET=your_secure_secret_key
 STRIPE_SECRET_KEY=sk_test_your_key
 STRIPE_PUBLISHABLE_KEY=pk_test_your_key
@@ -165,7 +165,7 @@ Access the admin panel at `/admin`
 ### Backend (.env)
 ```
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/be-creativity
+MONGODB_URI=mongodb://localhost:27017/be-creative-sd
 JWT_SECRET=your_jwt_secret_key_here
 STRIPE_SECRET_KEY=sk_test_your_stripe_key
 STRIPE_PUBLISHABLE_KEY=pk_test_your_stripe_key

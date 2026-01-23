@@ -1,6 +1,6 @@
-# BE Creativity - Command Reference
+# BE Creative SD - Command Reference
 
-Quick reference for all common commands needed to work with BE Creativity.
+Quick reference for all common commands needed to work with BE Creative SD.
 
 ## 📦 Installation Commands
 

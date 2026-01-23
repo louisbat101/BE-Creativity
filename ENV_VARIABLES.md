@@ -1,4 +1,4 @@
-# BE Creativity Environment Variables Reference
+# BE Creative SD Environment Variables Reference
 
 ## Backend Environment Variables (.env)
 
@@ -10,7 +10,7 @@ PORT=5000
 NODE_ENV=development
 
 # Database
-MONGODB_URI=mongodb://localhost:27017/be-creativity
+MONGODB_URI=mongodb://localhost:27017/be-creative-sd
 
 # Authentication
 JWT_SECRET=your_super_secret_jwt_key_change_this_in_production
@@ -90,7 +90,7 @@ REACT_APP_STRIPE_PUBLIC_KEY=pk_test_your_stripe_public_key
 ### Local MongoDB
 
 ```env
-MONGODB_URI=mongodb://localhost:27017/be-creativity
+MONGODB_URI=mongodb://localhost:27017/be-creative-sd
 ```
 
 Requires MongoDB running locally (use `mongod` command)
@@ -104,7 +104,7 @@ Requires MongoDB running locally (use `mongod` command)
 5. Add username and password
 
 ```env
-MONGODB_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/be-creativity
+MONGODB_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/be-creative-sd
 ```
 
 ---
@@ -140,7 +140,7 @@ PORT=5000
 NODE_ENV=development
 
 # Database (local)
-MONGODB_URI=mongodb://localhost:27017/be-creativity
+MONGODB_URI=mongodb://localhost:27017/be-creative-sd
 
 # Auth
 JWT_SECRET=5f7e3d8a9c2b1f6e4a9d3c8b2f1e5a7d9c4b6e8f1a3d5c7e9b2f4a6c8e0d2f
@@ -162,7 +162,7 @@ PORT=5000
 NODE_ENV=production
 
 # Database (MongoDB Atlas)
-MONGODB_URI=mongodb+srv://prod_user:SecurePassword123@be-creativity.xxxxx.mongodb.net/be-creativity
+MONGODB_URI=mongodb+srv://prod_user:SecurePassword123@be-creative-sd.xxxxx.mongodb.net/be-creative-sd
 
 # Auth
 JWT_SECRET=your_very_secure_random_key_min_32_chars
@@ -274,7 +274,7 @@ In `docker-compose.yml`:
 ```yaml
 environment:
   - PORT=5000
-  - MONGODB_URI=mongodb://mongo:27017/be-creativity
+  - MONGODB_URI=mongodb://mongo:27017/be-creative-sd
   - JWT_SECRET=your_secret
   - ADMIN_PASSWORD=password
 ```
@@ -284,7 +284,7 @@ environment:
 In `.env` for docker-compose:
 ```env
 PORT=5000
-MONGODB_URI=mongodb://mongo:27017/be-creativity
+MONGODB_URI=mongodb://mongo:27017/be-creative-sd
 JWT_SECRET=your_secret
 ADMIN_PASSWORD=password
 STRIPE_SECRET_KEY=sk_test_...
@@ -332,7 +332,7 @@ Check:
 
 ```env
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/be-creativity
+MONGODB_URI=mongodb://localhost:27017/be-creative-sd
 JWT_SECRET=any_random_string_here
 ADMIN_PASSWORD=admin123
 STRIPE_SECRET_KEY=sk_test_xxx

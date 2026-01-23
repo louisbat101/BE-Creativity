@@ -27,5 +27,5 @@ app.get('*', (req, res) => {
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
-  console.log(`✅ BE Creativity running on port ${PORT}`);
+  console.log(`✅ BE Creative SD running on port ${PORT}`);
 });

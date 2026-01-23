@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-console.log('✅ Initializing BE Creativity Backend');
+console.log('✅ Initializing BE Creative SD Backend');
 
 // Stripe initialization (lazy loaded, won't block startup)
 let stripe = null;
@@ -378,7 +378,7 @@ app.post('/api/charges', async (req, res) => {
       amount: Math.round(amount * 100), // Convert to cents
       currency: 'usd',
       receipt_email: customerEmail || undefined,
-      description: `BE Creativity Order - ${customerName || 'Guest'}`,
+      description: `BE Creative SD Order - ${customerName || 'Guest'}`,
       metadata: {
         itemCount: items ? items.length : 0,
         customerName: customerName || 'Guest',

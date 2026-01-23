@@ -11,7 +11,7 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="text-2xl font-bold text-green-400">
-              BE Creativity
+              BE Creative SD
             </Link>
           </div>
           <div className="flex items-center space-x-6">
