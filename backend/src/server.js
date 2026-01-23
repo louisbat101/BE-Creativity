@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 console.log('✅ Initializing BE Creative SD Backend');
 
-// Initialize MongoDB (non-blocking - server starts even if DB fails)
+// Initialize database (non-blocking - server starts even if DB fails)
 let dbConnected = false;
 connectDB().then(() => {
   dbConnected = true;
@@ -427,11 +427,12 @@ app.post('/api/payments/confirm', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 5001;
+const HOST = '0.0.0.0';
 
-app.listen(PORT, () => {
-  console.log(`✅ Server running on http://localhost:${PORT}`);
-  console.log(`📦 API Base: http://localhost:${PORT}/api`);
-  console.log(`�️  Database: ${dbConnected ? 'MongoDB Connected' : 'Connecting...'}`);
+app.listen(PORT, HOST, () => {
+  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`📦 API Base: http://0.0.0.0:${PORT}/api`);
+  console.log(`🗄️  Database: ${dbConnected ? 'Connected' : 'Connecting...'}`);
 });
 
 export default app;
