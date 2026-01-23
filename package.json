@@ -9,6 +9,9 @@
   },
   "scripts": {
     "start": "node server.js",
+    "build": "npm run install:all && npm run frontend:build",
+    "prebuild": "echo 'Installing dependencies...'",
+    "postinstall": "npm run frontend:install 2>/dev/null || true",
     "backend:install": "cd backend && npm install",
     "backend:dev": "cd backend && npm run dev",
     "backend:start": "cd backend && npm start",
@@ -16,7 +19,6 @@
     "frontend:start": "cd frontend && npm start",
     "frontend:build": "cd frontend && npm run build",
     "install:all": "npm install && npm run backend:install && npm run frontend:install",
-    "build": "npm run install:all && npm run frontend:build",
     "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:start\""
   },
   "dependencies": {
