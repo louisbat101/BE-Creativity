@@ -1,0 +1,10 @@
+{
+  "framework": "custom-nodejs",
+  "nodeVersion": "18.x",
+  "buildCommand": "npm run install:all && npm run build",
+  "startCommand": "npm start",
+  "env": {
+    "PORT": "5001",
+    "NODE_ENV": "production"
+  }
+}
