@@ -2,6 +2,7 @@
   command = "cd frontend && npm ci --include=dev && npm run build"
   publish = "frontend/build"
   node_version = "24.x"
+  environment = { REACT_APP_API_URL = "https://be-creativity-api.onrender.com/api" }
 
 # React client-side routing - all routes go to index.html
 [[redirects]]
