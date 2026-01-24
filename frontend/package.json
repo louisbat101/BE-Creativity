@@ -2,6 +2,9 @@
   "name": "be-creative-sd-frontend",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "24.x"
+  },
   "proxy": "http://localhost:5000",
   "dependencies": {
     "react": "^18.2.0",
