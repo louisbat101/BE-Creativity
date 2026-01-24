@@ -27,6 +27,11 @@ export default function AdminPayments() {
     }
   };
 
+  useEffect(() => {
+    fetchPaymentLinks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);

@@ -7,10 +7,6 @@ export default function AdminOrders() {
   const [orders, setOrders] = useState([]);
   const { token } = useContext(AuthContext);
 
-  useEffect(() => {
-    fetchOrders();
-  }, [token]);
-
   const fetchOrders = async () => {
     try {
       const response = await orderAPI.getAll(token);
@@ -19,6 +15,11 @@ export default function AdminOrders() {
       console.error('Failed to fetch orders:', err);
     }
   };
+
+  useEffect(() => {
+    fetchOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
 
   const updateStatus = async (orderId, newStatus) => {
     try {
