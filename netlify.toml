@@ -1,13 +1,9 @@
 [build]
   command = "cd frontend && npm run build"
   publish = "frontend/build"
+  node_version = "24.x"
 
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/api/:splat"
-  status = 200
-  force = true
-
+# React client-side routing - all routes go to index.html
 [[redirects]]
   from = "/*"
   to = "/index.html"
