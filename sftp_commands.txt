@@ -1,0 +1,8 @@
+cd public_html
+put server.js
+put package.json
+put package-lock.json
+put .env
+put -r frontend
+put -r backend
+bye
