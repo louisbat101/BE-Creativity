@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { orderAPI } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
@@ -7,19 +7,18 @@ export default function AdminOrders() {
   const [orders, setOrders] = useState([]);
   const { token } = useContext(AuthContext);
 
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     try {
       const response = await orderAPI.getAll(token);
       setOrders(response.data);
     } catch (err) {
       console.error('Failed to fetch orders:', err);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     fetchOrders();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+  }, [fetchOrders]);
 
   const updateStatus = async (orderId, newStatus) => {
     try {

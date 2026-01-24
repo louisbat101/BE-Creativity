@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { paymentAPI } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
@@ -14,23 +14,18 @@ export default function AdminPayments() {
   const [loading, setLoading] = useState(false);
   const { token } = useContext(AuthContext);
 
-  useEffect(() => {
-    fetchPaymentLinks();
-  }, [token]);
-
-  const fetchPaymentLinks = async () => {
+  const fetchPaymentLinks = useCallback(async () => {
     try {
       const response = await paymentAPI.getAll(token);
       setPaymentLinks(response.data);
     } catch (err) {
       console.error('Failed to fetch payment links:', err);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     fetchPaymentLinks();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+  }, [fetchPaymentLinks]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
