@@ -37,6 +37,11 @@ const Product = sequelize.define('Product', {
     allowNull: false,
     defaultValue: 'BE Natural',
   },
+  subcategory: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    defaultValue: null,
+  },
   images: {
     type: DataTypes.JSON,
     allowNull: true,
@@ -162,6 +167,30 @@ const PaymentLink = sequelize.define('PaymentLink', {
 }, {
   timestamps: true,
   tableName: 'payment_links',
+});
+
+// Define Subcategory Model
+const Subcategory = sequelize.define('Subcategory', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  category: {
+    type: DataTypes.ENUM('BE Natural', 'BE Custom'),
+    allowNull: false,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: Sequelize.NOW,
+  },
+}, {
+  timestamps: true,
+  tableName: 'subcategories',
 });
 
 // Database Connection
@@ -317,4 +346,35 @@ export const paymentLinkDB = {
   }
 };
 
-export { Product, Order, PaymentLink, sequelize };
+export const subcategoryDB = {
+  getAll: async () => {
+    return await Subcategory.findAll();
+  },
+  
+  getByCategory: async (category) => {
+    return await Subcategory.findAll({ where: { category } });
+  },
+  
+  getById: async (id) => {
+    return await Subcategory.findByPk(id);
+  },
+  
+  create: async (data) => {
+    return await Subcategory.create(data);
+  },
+  
+  update: async (id, data) => {
+    await Subcategory.update(data, { where: { id } });
+    return await Subcategory.findByPk(id);
+  },
+  
+  delete: async (id) => {
+    const subcategory = await Subcategory.findByPk(id);
+    if (subcategory) {
+      await subcategory.destroy();
+    }
+    return subcategory;
+  }
+};
+
+export { Product, Order, PaymentLink, Subcategory, sequelize };

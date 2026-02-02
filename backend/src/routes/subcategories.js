@@ -1,5 +1,5 @@
 import express from 'express';
-import Subcategory from '../models/Subcategory.js';
+import { subcategoryDB } from '../db.js';
 import { authMiddleware } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -7,7 +7,7 @@ const router = express.Router();
 // Get all subcategories for a category
 router.get('/:category', async (req, res) => {
   try {
-    const subcategories = await Subcategory.find({ category: req.params.category }).sort({ createdAt: 1 });
+    const subcategories = await subcategoryDB.getByCategory(req.params.category);
     res.json(subcategories);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -17,7 +17,7 @@ router.get('/:category', async (req, res) => {
 // Get all subcategories
 router.get('/', async (req, res) => {
   try {
-    const subcategories = await Subcategory.find().sort({ category: 1, createdAt: 1 });
+    const subcategories = await subcategoryDB.getAll();
     res.json(subcategories);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -33,14 +33,7 @@ router.post('/', authMiddleware, async (req, res) => {
       return res.status(400).json({ error: 'Name and category are required' });
     }
 
-    // Check if subcategory already exists
-    const existing = await Subcategory.findOne({ name, category });
-    if (existing) {
-      return res.status(400).json({ error: 'Subcategory already exists' });
-    }
-
-    const subcategory = new Subcategory({ name, category });
-    await subcategory.save();
+    const subcategory = await subcategoryDB.create({ name, category });
     res.status(201).json(subcategory);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -56,12 +49,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
       return res.status(400).json({ error: 'Name is required' });
     }
 
-    const subcategory = await Subcategory.findByIdAndUpdate(
-      req.params.id,
-      { name },
-      { new: true, runValidators: true }
-    );
-
+    const subcategory = await subcategoryDB.update(req.params.id, { name });
     if (!subcategory) {
       return res.status(404).json({ error: 'Subcategory not found' });
     }
@@ -75,8 +63,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
 // Delete subcategory (admin only)
 router.delete('/:id', authMiddleware, async (req, res) => {
   try {
-    const subcategory = await Subcategory.findByIdAndDelete(req.params.id);
-
+    const subcategory = await subcategoryDB.delete(req.params.id);
     if (!subcategory) {
       return res.status(404).json({ error: 'Subcategory not found' });
     }
@@ -88,3 +75,4 @@ router.delete('/:id', authMiddleware, async (req, res) => {
 });
 
 export default router;
+
