@@ -235,9 +235,9 @@ export default function AdminSettings() {
             </button>
             <button
               onClick={() => setActiveTab('subcategories')}
-              className={`px-6 py-2 rounded-lg font-bold transition ${activeTab === 'subcategories' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 border border-gray-300'}`}
+              className={`px-6 py-2 rounded-lg font-bold transition ${activeTab === 'subcategories' ? 'bg-green-600 text-white' : 'bg-white text-gray-700 border-2 border-green-500'}`}
             >
-              Subcategories
+              ✨ Subcategories
             </button>
             <button
               onClick={() => setActiveTab('footer')}
