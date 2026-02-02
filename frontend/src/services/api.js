@@ -1,9 +1,22 @@
 import axios from 'axios';
 
-// Get API URL from runtime config (loaded from public/config.js)
-const API_URL = window.API_CONFIG ? window.API_CONFIG.getApiUrl() : 'https://be-creativity-api.onrender.com/api';
+// Get API URL dynamically at runtime
+const getApiUrl = () => {
+  // First try the global config loaded from public/config.js
+  if (typeof window !== 'undefined' && window.API_CONFIG) {
+    return window.API_CONFIG.getApiUrl();
+  }
+  
+  // Fallback: detect hostname here
+  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+    return 'http://localhost:5001/api';
+  }
+  
+  // Default to production API
+  return 'https://be-creativity-api.onrender.com/api';
+};
 
-// Debug log
+const API_URL = getApiUrl();
 console.log('🔗 API URL:', API_URL);
 
 export const authAPI = {
