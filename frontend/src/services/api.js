@@ -1,81 +1,87 @@
 import axios from 'axios';
 
-// Get API URL dynamically at runtime
+// Get API URL dynamically - check every time since config.js may not be loaded yet
 const getApiUrl = () => {
-  // First try the global config loaded from public/config.js
-  if (typeof window !== 'undefined' && window.API_CONFIG) {
-    return window.API_CONFIG.getApiUrl();
+  // Try the global config (from public/config.js) first
+  if (typeof window !== 'undefined' && window.API_CONFIG && typeof window.API_CONFIG.getApiUrl === 'function') {
+    const url = window.API_CONFIG.getApiUrl();
+    console.log('🔗 Using API_CONFIG:', url);
+    return url;
   }
   
-  // Fallback: detect hostname here
-  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-    return 'http://localhost:5001/api';
+  // Fallback: detect hostname
+  if (typeof window !== 'undefined') {
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      console.log('🔗 Using localhost:', 'http://localhost:5001/api');
+      return 'http://localhost:5001/api';
+    }
   }
   
   // Default to production API
+  console.log('🔗 Using production API:', 'https://be-creativity-api.onrender.com/api');
   return 'https://be-creativity-api.onrender.com/api';
 };
 
-const API_URL = getApiUrl();
-console.log('🔗 API URL:', API_URL);
+// Don't cache API_URL - call getApiUrl() for each request
+// This ensures we always have the correct URL based on current hostname
 
 export const authAPI = {
-  login: (password) => axios.post(`${API_URL}/auth/admin-login`, { password }),
-  verify: (token) => axios.get(`${API_URL}/auth/verify`, {
+  login: (password) => axios.post(`${getApiUrl()}/auth/admin-login`, { password }),
+  verify: (token) => axios.get(`${getApiUrl()}/auth/verify`, {
     headers: { Authorization: `Bearer ${token}` }
   })
 };
 
 export const productAPI = {
   getAll: (category) => {
-    const url = category ? `${API_URL}/products?category=${category}` : `${API_URL}/products`;
+    const url = category ? `${getApiUrl()}/products?category=${category}` : `${getApiUrl()}/products`;
     return axios.get(url);
   },
-  getById: (id) => axios.get(`${API_URL}/products/${id}`),
-  create: (data, token) => axios.post(`${API_URL}/products`, data, {
+  getById: (id) => axios.get(`${getApiUrl()}/products/${id}`),
+  create: (data, token) => axios.post(`${getApiUrl()}/products`, data, {
     headers: { Authorization: `Bearer ${token}` }
   }),
-  update: (id, data, token) => axios.put(`${API_URL}/products/${id}`, data, {
+  update: (id, data, token) => axios.put(`${getApiUrl()}/products/${id}`, data, {
     headers: { Authorization: `Bearer ${token}` }
   }),
-  delete: (id, token) => axios.delete(`${API_URL}/products/${id}`, {
+  delete: (id, token) => axios.delete(`${getApiUrl()}/products/${id}`, {
     headers: { Authorization: `Bearer ${token}` }
   })
 };
 
 export const subcategoryAPI = {
-  getByCategory: (category) => axios.get(`${API_URL}/subcategories/${category}`),
-  getAll: () => axios.get(`${API_URL}/subcategories`),
-  create: (data, token) => axios.post(`${API_URL}/subcategories`, data, {
+  getByCategory: (category) => axios.get(`${getApiUrl()}/subcategories/${category}`),
+  getAll: () => axios.get(`${getApiUrl()}/subcategories`),
+  create: (data, token) => axios.post(`${getApiUrl()}/subcategories`, data, {
     headers: { Authorization: `Bearer ${token}` }
   }),
-  update: (id, data, token) => axios.put(`${API_URL}/subcategories/${id}`, data, {
+  update: (id, data, token) => axios.put(`${getApiUrl()}/subcategories/${id}`, data, {
     headers: { Authorization: `Bearer ${token}` }
   }),
-  delete: (id, token) => axios.delete(`${API_URL}/subcategories/${id}`, {
+  delete: (id, token) => axios.delete(`${getApiUrl()}/subcategories/${id}`, {
     headers: { Authorization: `Bearer ${token}` }
   })
 };
 
 export const orderAPI = {
-  create: (data) => axios.post(`${API_URL}/orders`, data),
-  getById: (id) => axios.get(`${API_URL}/orders/${id}`),
-  getAll: (token) => axios.get(`${API_URL}/orders`, {
+  create: (data) => axios.post(`${getApiUrl()}/orders`, data),
+  getById: (id) => axios.get(`${getApiUrl()}/orders/${id}`),
+  getAll: (token) => axios.get(`${getApiUrl()}/orders`, {
     headers: { Authorization: `Bearer ${token}` }
   }),
-  updateStatus: (id, status, token) => axios.put(`${API_URL}/orders/${id}/status`, { status }, {
+  updateStatus: (id, status, token) => axios.put(`${getApiUrl()}/orders/${id}/status`, { status }, {
     headers: { Authorization: `Bearer ${token}` }
   })
 };
 
 export const paymentAPI = {
-  createLink: (data, token) => axios.post(`${API_URL}/payments/create-link`, data, {
+  createLink: (data, token) => axios.post(`${getApiUrl()}/payments/create-link`, data, {
     headers: { Authorization: `Bearer ${token}` }
   }),
-  getAll: (token) => axios.get(`${API_URL}/payments`, {
+  getAll: (token) => axios.get(`${getApiUrl()}/payments`, {
     headers: { Authorization: `Bearer ${token}` }
   }),
-  delete: (id, token) => axios.delete(`${API_URL}/payments/${id}`, {
+  delete: (id, token) => axios.delete(`${getApiUrl()}/payments/${id}`, {
     headers: { Authorization: `Bearer ${token}` }
   })
 };
