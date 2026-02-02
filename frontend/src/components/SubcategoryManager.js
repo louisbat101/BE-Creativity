@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { subcategoryAPI } from '../services/api';
 
 export default function SubcategoryManager({ token }) {
@@ -16,7 +16,7 @@ export default function SubcategoryManager({ token }) {
     setTimeout(() => setMessage(''), 3000);
   };
 
-  const fetchSubcategories = async () => {
+  const fetchSubcategories = useCallback(async () => {
     try {
       const response = await subcategoryAPI.getAll();
       setSubcategories(response.data);
@@ -24,11 +24,11 @@ export default function SubcategoryManager({ token }) {
       console.error('Failed to fetch subcategories:', err);
       showMessage('Failed to load subcategories', 'error');
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchSubcategories();
-  }, []);
+  }, [fetchSubcategories]);
 
   const handleAddSubcategory = async (e) => {
     e.preventDefault();
