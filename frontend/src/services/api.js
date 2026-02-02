@@ -1,13 +1,7 @@
 import axios from 'axios';
 
-// Always use Render backend for production, use localhost only if explicitly on localhost
-const API_URL = (() => {
-  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
-    return 'http://localhost:5001/api';
-  }
-  // For production (becreativesd.com or any deployed URL), use Render API
-  return 'https://be-creativity-api.onrender.com/api';
-})();
+// Get API URL from runtime config (loaded from public/config.js)
+const API_URL = window.API_CONFIG ? window.API_CONFIG.getApiUrl() : 'https://be-creativity-api.onrender.com/api';
 
 // Debug log
 console.log('🔗 API URL:', API_URL);
