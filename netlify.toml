@@ -4,6 +4,27 @@
   node_version = "24.x"
   environment = { REACT_APP_API_URL = "https://be-creativity-api.onrender.com/api" }
 
+# Cache control headers
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
 # React client-side routing - all routes go to index.html
 [[redirects]]
   from = "/*"
