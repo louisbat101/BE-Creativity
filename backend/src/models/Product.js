@@ -15,6 +15,10 @@ const productSchema = new mongoose.Schema({
     enum: ['BE Natural', 'BE Custom'],
     required: true
   },
+  subcategory: {
+    type: String,
+    default: null
+  },
   images: [String],
   stock: {
     type: Number,

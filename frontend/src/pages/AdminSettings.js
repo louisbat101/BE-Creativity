@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import SubcategoryManager from '../components/SubcategoryManager';
 
 export default function AdminSettings() {
-  const { logout } = React.useContext(AuthContext);
+  const { logout, token } = React.useContext(AuthContext);
   const navigate = useNavigate();
   const [introduction, setIntroduction] = useState('');
   const [footerData, setFooterData] = useState({
@@ -233,6 +234,12 @@ export default function AdminSettings() {
               Home Introduction
             </button>
             <button
+              onClick={() => setActiveTab('subcategories')}
+              className={`px-6 py-2 rounded-lg font-bold transition ${activeTab === 'subcategories' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 border border-gray-300'}`}
+            >
+              Subcategories
+            </button>
+            <button
               onClick={() => setActiveTab('footer')}
               className={`px-6 py-2 rounded-lg font-bold transition ${activeTab === 'footer' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 border border-gray-300'}`}
             >
@@ -289,6 +296,15 @@ export default function AdminSettings() {
                   <p className="text-lg text-gray-700 leading-relaxed">{introduction}</p>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* Subcategories Tab */}
+          {activeTab === 'subcategories' && (
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-2xl font-bold mb-4">Manage Subcategories</h2>
+              <p className="text-gray-600 mb-6">Add, edit, or delete subcategories for BE Natural and BE Custom product categories.</p>
+              <SubcategoryManager token={token} />
             </div>
           )}
 

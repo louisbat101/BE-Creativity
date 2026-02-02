@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { productAPI } from '../services/api';
 import ProductCard from './ProductCard';
 
-export default function ProductList({ category }) {
+export default function ProductList({ category, subcategory }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -10,7 +10,12 @@ export default function ProductList({ category }) {
     const fetchProducts = async () => {
       try {
         const response = await productAPI.getAll(category);
-        setProducts(response.data);
+        // Filter by subcategory if selected
+        let filtered = response.data;
+        if (subcategory) {
+          filtered = response.data.filter(p => p.subcategory === subcategory);
+        }
+        setProducts(filtered);
       } catch (err) {
         console.error('Failed to fetch products:', err);
       } finally {
@@ -19,7 +24,7 @@ export default function ProductList({ category }) {
     };
 
     fetchProducts();
-  }, [category]);
+  }, [category, subcategory]);
 
   if (loading) {
     return <div className="text-center py-8">Loading products...</div>;

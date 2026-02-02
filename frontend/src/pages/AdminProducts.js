@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { productAPI } from '../services/api';
+import { productAPI, subcategoryAPI } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 
 export default function AdminProducts() {
@@ -12,16 +12,33 @@ export default function AdminProducts() {
     description: '',
     price: '',
     category: 'BE Natural',
+    subcategory: '',
     stock: '',
     images: []
   });
   const [imagePreview, setImagePreview] = useState([]);
   const [uploadError, setUploadError] = useState('');
+  const [subcategories, setSubcategories] = useState([]);
   const { token } = useContext(AuthContext);
 
   useEffect(() => {
     fetchProducts();
+    fetchSubcategories();
   }, [token]);
+
+  useEffect(() => {
+    // Update available subcategories when category changes
+    fetchSubcategoriesForCategory(formData.category);
+  }, [formData.category]);
+
+  const fetchSubcategoriesForCategory = async (category) => {
+    try {
+      const response = await subcategoryAPI.getByCategory(category);
+      setSubcategories(response.data);
+    } catch (err) {
+      console.error('Failed to fetch subcategories:', err);
+    }
+  };
 
   const handleImageChange = (e) => {
     setUploadError('');
@@ -132,7 +149,7 @@ export default function AdminProducts() {
 
   const handleCancel = () => {
     setEditingId(null);
-    setFormData({ name: '', description: '', price: '', category: 'BE Natural', stock: '', images: [] });
+    setFormData({ name: '', description: '', price: '', category: 'BE Natural', subcategory: '', stock: '', images: [] });
     setImagePreview([]);
     setUploadError('');
     setShowForm(false);
@@ -227,6 +244,18 @@ export default function AdminProducts() {
                   <option value="BE Natural">BE Natural</option>
                   <option value="BE Custom">BE Custom</option>
                 </select>
+                <select
+                  value={formData.subcategory}
+                  onChange={(e) => setFormData({ ...formData, subcategory: e.target.value })}
+                  className="border border-gray-300 rounded px-4 py-2"
+                >
+                  <option value="">No Subcategory</option>
+                  {subcategories.map(sub => (
+                    <option key={sub._id} value={sub.name}>
+                      {sub.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <textarea
@@ -313,6 +342,7 @@ export default function AdminProducts() {
                 <th className="px-6 py-3 text-left">Images</th>
                 <th className="px-6 py-3 text-left">Name</th>
                 <th className="px-6 py-3 text-left">Category</th>
+                <th className="px-6 py-3 text-left">Subcategory</th>
                 <th className="px-6 py-3 text-left">Price</th>
                 <th className="px-6 py-3 text-left">Stock</th>
                 <th className="px-6 py-3 text-left">Actions</th>
@@ -330,6 +360,7 @@ export default function AdminProducts() {
                   </td>
                   <td className="px-6 py-4">{product.name}</td>
                   <td className="px-6 py-4">{product.category}</td>
+                  <td className="px-6 py-4">{product.subcategory || '-'}</td>
                   <td className="px-6 py-4">${product.price}</td>
                   <td className="px-6 py-4">{product.stock}</td>
                   <td className="px-6 py-4 space-x-2">

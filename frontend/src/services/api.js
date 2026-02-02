@@ -26,6 +26,20 @@ export const productAPI = {
   })
 };
 
+export const subcategoryAPI = {
+  getByCategory: (category) => axios.get(`${API_URL}/subcategories/${category}`),
+  getAll: () => axios.get(`${API_URL}/subcategories`),
+  create: (data, token) => axios.post(`${API_URL}/subcategories`, data, {
+    headers: { Authorization: `Bearer ${token}` }
+  }),
+  update: (id, data, token) => axios.put(`${API_URL}/subcategories/${id}`, data, {
+    headers: { Authorization: `Bearer ${token}` }
+  }),
+  delete: (id, token) => axios.delete(`${API_URL}/subcategories/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+};
+
 export const orderAPI = {
   create: (data) => axios.post(`${API_URL}/orders`, data),
   getById: (id) => axios.get(`${API_URL}/orders/${id}`),

@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB, orderDB, productDB, Product, Order } from './db.js';
+import subcategoryRoutes from './routes/subcategories.js';
 
 dotenv.config();
 
@@ -205,6 +206,10 @@ app.delete('/api/products/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to delete product' });
   }
 });
+
+// ============ SUBCATEGORIES ROUTES ============
+
+app.use('/api/subcategories', subcategoryRoutes);
 
 // ============ ORDERS ROUTES ============
 
