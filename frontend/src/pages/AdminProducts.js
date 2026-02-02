@@ -341,9 +341,9 @@ export default function AdminProducts() {
                 <th className="px-6 py-3 text-left">Images</th>
                 <th className="px-6 py-3 text-left">Name</th>
                 <th className="px-6 py-3 text-left">Category</th>
-                <th className="px-6 py-3 text-left">Subcategory</th>
                 <th className="px-6 py-3 text-left">Price</th>
                 <th className="px-6 py-3 text-left">Stock</th>
+                <th className="px-6 py-3 text-left">Subcategory</th>
                 <th className="px-6 py-3 text-left">Actions</th>
               </tr>
             </thead>
@@ -359,9 +359,9 @@ export default function AdminProducts() {
                   </td>
                   <td className="px-6 py-4">{product.name}</td>
                   <td className="px-6 py-4">{product.category}</td>
-                  <td className="px-6 py-4">{product.subcategory || '-'}</td>
                   <td className="px-6 py-4">${product.price}</td>
                   <td className="px-6 py-4">{product.stock}</td>
+                  <td className="px-6 py-4">{product.subcategory || '-'}</td>
                   <td className="px-6 py-4 space-x-2">
                     <button 
                       onClick={() => handleEdit(product)}
