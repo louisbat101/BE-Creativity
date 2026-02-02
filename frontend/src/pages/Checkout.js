@@ -56,7 +56,8 @@ export default function Checkout() {
 
     try {
       // Send order to backend
-      const response = await fetch('http://localhost:5001/api/orders', {
+      const API_URL = window.API_CONFIG?.getApiUrl?.() || 'https://be-creativity-api.onrender.com/api';
+      const response = await fetch(`${API_URL}/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(order)

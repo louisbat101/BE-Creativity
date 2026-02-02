@@ -18,12 +18,15 @@ export default function AdminDashboard() {
 
   const fetchStats = async () => {
     try {
+      // Get API URL dynamically
+      const API_URL = window.API_CONFIG?.getApiUrl?.() || 'https://be-creativity-api.onrender.com/api';
+      
       // Fetch products
-      const productsRes = await fetch('http://localhost:5001/api/products');
+      const productsRes = await fetch(`${API_URL}/products`);
       const products = await productsRes.json();
 
       // Fetch orders
-      const ordersRes = await fetch('http://localhost:5001/api/orders');
+      const ordersRes = await fetch(`${API_URL}/orders`);
       const orders = await ordersRes.json();
 
       // Calculate stats

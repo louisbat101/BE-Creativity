@@ -7,7 +7,8 @@
 
 export const createPaymentIntent = async (amount, cartItems) => {
   try {
-    const response = await fetch('http://localhost:5001/api/payments/create-payment-intent', {
+    const API_URL = window.API_CONFIG?.getApiUrl?.() || 'https://be-creativity-api.onrender.com/api';
+    const response = await fetch(`${API_URL}/payments/create-payment-intent`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

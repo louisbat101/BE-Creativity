@@ -13,9 +13,11 @@ const CardPaymentForm = ({ amount, cartItems, onSuccess, onError, customerInfo =
     setError(null);
 
     try {
+      const API_URL = window.API_CONFIG?.getApiUrl?.() || 'https://be-creativity-api.onrender.com/api';
+      
       // Step 1: Create payment intent on backend
       console.log('Creating payment intent for $' + amount);
-      const intentResponse = await fetch('http://localhost:5001/api/charges', {
+      const intentResponse = await fetch(`${API_URL}/charges`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -39,7 +41,7 @@ const CardPaymentForm = ({ amount, cartItems, onSuccess, onError, customerInfo =
       await new Promise(resolve => setTimeout(resolve, 1500));
 
       // Step 3: Confirm the payment
-      const confirmResponse = await fetch('http://localhost:5001/api/payments/confirm', {
+      const confirmResponse = await fetch(`${API_URL}/payments/confirm`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
