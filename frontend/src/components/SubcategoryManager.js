@@ -10,9 +10,11 @@ export default function SubcategoryManager({ token }) {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
 
-  useEffect(() => {
-    fetchSubcategories();
-  }, [token]);
+  const showMessage = (text, type) => {
+    setMessage(text);
+    setMessageType(type);
+    setTimeout(() => setMessage(''), 3000);
+  };
 
   const fetchSubcategories = async () => {
     try {
@@ -24,11 +26,9 @@ export default function SubcategoryManager({ token }) {
     }
   };
 
-  const showMessage = (text, type) => {
-    setMessage(text);
-    setMessageType(type);
-    setTimeout(() => setMessage(''), 3000);
-  };
+  useEffect(() => {
+    fetchSubcategories();
+  }, []);
 
   const handleAddSubcategory = async (e) => {
     e.preventDefault();
