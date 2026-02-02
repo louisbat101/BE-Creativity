@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
+// Use Render backend for production, localhost for development
+const API_URL = process.env.REACT_APP_API_URL || 
+  (typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+    ? 'http://localhost:5001/api' 
+    : 'https://be-creativity-api.onrender.com/api');
 
 export const authAPI = {
   login: (password) => axios.post(`${API_URL}/auth/admin-login`, { password }),
