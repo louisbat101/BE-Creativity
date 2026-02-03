@@ -6,6 +6,7 @@ const router = express.Router();
 
 // Store for dynamic admin password
 let adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
 // Admin login
 router.post('/admin-login', async (req, res) => {
@@ -24,7 +25,7 @@ router.post('/admin-login', async (req, res) => {
 
     const token = jwt.sign(
       { isAdmin: true },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: '24h' }
     );
 
@@ -43,7 +44,7 @@ router.get('/verify', (req, res) => {
   }
 
   try {
-    jwt.verify(token, process.env.JWT_SECRET);
+    jwt.verify(token, JWT_SECRET);
     res.json({ valid: true });
   } catch {
     res.status(401).json({ valid: false });
