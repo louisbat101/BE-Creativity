@@ -24,7 +24,7 @@ export default function BENatural() {
 
   return (
     <div>
-      <div className="bg-gradient-to-r from-green-400 to-green-600 text-white py-12">
+      <div className="bg-gradient-to-r from-blue-700 to-blue-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4">
           <h1 className="text-4xl font-bold">BE Natural</h1>
           <p className="text-lg mt-2">Premium Natural Products</p>
@@ -40,7 +40,7 @@ export default function BENatural() {
                 onClick={() => setSelectedSubcategory(null)}
                 className={`px-4 py-2 rounded-lg font-medium transition ${
                   selectedSubcategory === null
-                    ? 'bg-green-600 text-white'
+                    ? 'bg-blue-600 text-white'
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
@@ -52,7 +52,7 @@ export default function BENatural() {
                   onClick={() => setSelectedSubcategory(sub.name)}
                   className={`px-4 py-2 rounded-lg font-medium transition ${
                     selectedSubcategory === sub.name
-                      ? 'bg-green-600 text-white'
+                      ? 'bg-blue-600 text-white'
                       : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                   }`}
                 >
