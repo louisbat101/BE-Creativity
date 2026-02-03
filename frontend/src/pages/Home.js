@@ -62,7 +62,7 @@ export default function Home() {
           <h1 className="text-7xl font-black mb-4 tracking-wider" style={{
             textShadow: '4px 4px 12px rgba(0, 0, 0, 0.7), 0 0 20px rgba(96, 165, 250, 0.6), 2px 2px 0 rgba(139, 90, 43, 0.3)',
             letterSpacing: '2px'
-          }}>BE Creative SD</h1>
+          }}>BE creativeSD</h1>
           <p className="text-3xl mb-8 opacity-95 font-semibold" style={{
             textShadow: '2px 2px 6px rgba(0, 0, 0, 0.5)'
           }}>Premium Natural & Custom Products</p>
