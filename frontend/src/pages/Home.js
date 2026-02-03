@@ -17,25 +17,60 @@ export default function Home() {
 
   return (
     <div>
-      {/* Hero Section - Wood Board Style */}
-      <div className="bg-gradient-to-b from-blue-900 via-blue-800 to-blue-900 text-white py-20 relative overflow-hidden" style={{
+      {/* Hero Section - Blue Wood Board Style */}
+      <div className="bg-gradient-to-b from-blue-950 via-blue-900 to-blue-950 text-white py-32 relative overflow-hidden" style={{
         backgroundImage: `
-          linear-gradient(90deg, rgba(30, 58, 138, 0.9) 0%, rgba(37, 99, 235, 0.9) 50%, rgba(30, 58, 138, 0.9) 100%),
-          repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.1) 2px, rgba(0, 0, 0, 0.1) 4px),
-          repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(255, 255, 255, 0.05) 1px, rgba(255, 255, 255, 0.05) 2px)
+          linear-gradient(135deg, 
+            #0f3a7d 0%, #1e3a8a 15%, #1e40af 25%, 
+            #1e3a8a 35%, #0f3a7d 50%, #1e3a8a 65%, 
+            #1e40af 75%, #1e3a8a 85%, #0f3a7d 100%
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent 0px,
+            transparent 3px,
+            rgba(0, 0, 0, 0.15) 3px,
+            rgba(0, 0, 0, 0.15) 4px,
+            transparent 4px,
+            transparent 7px,
+            rgba(0, 0, 0, 0.08) 7px,
+            rgba(0, 0, 0, 0.08) 8px
+          ),
+          repeating-linear-gradient(
+            0deg,
+            transparent 0px,
+            transparent 2px,
+            rgba(255, 255, 255, 0.08) 2px,
+            rgba(255, 255, 255, 0.08) 3px,
+            transparent 3px,
+            transparent 5px,
+            rgba(255, 255, 255, 0.04) 5px,
+            rgba(255, 255, 255, 0.04) 6px
+          ),
+          repeating-linear-gradient(
+            45deg,
+            transparent 0px,
+            transparent 1px,
+            rgba(139, 90, 43, 0.1) 1px,
+            rgba(139, 90, 43, 0.1) 2px
+          )
         `,
-        textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)'
+        backgroundSize: '100% 100%, 100% 100%, 100% 100%, 100% 100%',
+        textShadow: '3px 3px 8px rgba(0, 0, 0, 0.6), 0 0 15px rgba(59, 130, 246, 0.4)'
       }}>
         <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
-          <h1 className="text-6xl font-bold mb-4" style={{
-            textShadow: '3px 3px 6px rgba(0, 0, 0, 0.5), 0 0 10px rgba(147, 197, 253, 0.5)'
+          <h1 className="text-7xl font-black mb-4 tracking-wider" style={{
+            textShadow: '4px 4px 12px rgba(0, 0, 0, 0.7), 0 0 20px rgba(96, 165, 250, 0.6), 2px 2px 0 rgba(139, 90, 43, 0.3)',
+            letterSpacing: '2px'
           }}>BE Creative SD</h1>
-          <p className="text-2xl mb-8 opacity-90">Premium Natural & Custom Products</p>
+          <p className="text-3xl mb-8 opacity-95 font-semibold" style={{
+            textShadow: '2px 2px 6px rgba(0, 0, 0, 0.5)'
+          }}>Premium Natural & Custom Products</p>
           <div className="space-x-4 flex justify-center flex-wrap gap-4">
-            <Link to="/be-natural" className="bg-white text-blue-700 px-8 py-3 rounded-lg font-bold hover:bg-blue-50 transition shadow-lg hover:shadow-xl">
+            <Link to="/be-natural" className="bg-white text-blue-900 px-8 py-4 rounded-lg font-bold hover:bg-blue-50 transition shadow-2xl hover:shadow-2xl hover:scale-105 transform">
               Explore Natural
             </Link>
-            <Link to="/be-custom" className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-lg font-bold hover:bg-white hover:text-blue-800 transition shadow-lg">
+            <Link to="/be-custom" className="bg-blue-700 border-2 border-white text-white px-8 py-4 rounded-lg font-bold hover:bg-blue-600 transition shadow-2xl hover:shadow-2xl hover:scale-105 transform">
               Explore Custom
             </Link>
           </div>
