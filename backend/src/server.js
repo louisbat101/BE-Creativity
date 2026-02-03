@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB, orderDB, productDB, Product, Order } from './db.js';
 import subcategoryRoutes from './routes/subcategories.js';
+import authRoutes from './routes/auth.js';
 
 dotenv.config();
 
@@ -212,6 +213,10 @@ app.delete('/api/products/:id', async (req, res) => {
   }
 });
 
+// ============ AUTH ROUTES ============
+
+app.use('/api/auth', authRoutes);
+
 // ============ SUBCATEGORIES ROUTES ============
 
 app.use('/api/subcategories', subcategoryRoutes);
@@ -301,32 +306,6 @@ app.put('/api/orders/:id/payment-status', async (req, res) => {
     console.error('Update payment status error:', err);
     res.status(500).json({ error: 'Failed to update payment status' });
   }
-});
-
-// Admin login
-app.post('/api/auth/admin-login', (req, res) => {
-  const { password } = req.body;
-  
-  if (!password) {
-    return res.status(400).json({ error: 'Password required' });
-  }
-
-  if (password !== adminPassword) {
-    return res.status(401).json({ error: 'Invalid password' });
-  }
-
-  res.json({ token: 'demo-token-' + Date.now(), message: 'Login successful' });
-});
-
-// Verify token
-app.get('/api/auth/verify', (req, res) => {
-  const token = req.headers.authorization?.split(' ')[1];
-  
-  if (!token) {
-    return res.status(401).json({ valid: false });
-  }
-
-  res.json({ valid: true });
 });
 
 // Set Stripe API key (called from frontend settings)
